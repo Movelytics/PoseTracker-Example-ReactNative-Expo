@@ -4,8 +4,8 @@ import WebView from 'react-native-webview';
 import {Camera, useCameraPermissions} from 'expo-camera';
 
 // Our API request your token provided on our dashboard on posetracker.com (It's free <3)
-const API_KEY = "TO_REPLACE_FIND_IT_ON_www.posetracker.com";
-const POSETRACKER_API = "https://posetracker.com/pose_tracker/tracking";
+const API_KEY = "TO_REPLACE_FIND_IT_ON_app.posetracker.com";
+const POSETRACKER_API = "https://app.posetracker.com/pose_tracker/tracking";
 
 // Get the dimensions of the screen
 const { width, height } = Dimensions.get('window');
