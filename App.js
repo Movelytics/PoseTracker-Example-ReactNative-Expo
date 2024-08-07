@@ -3,8 +3,8 @@ import {useState} from "react";
 import WebView from "react-native-webview";
 
 // Our API request your token provided on our dashboard on posetracker.com (It's free <3)
-const API_KEY =  "REPLACE_THIS_GO_TO_posetracker.com"
-const POSETRACKER_API = "https://posetracker.com/pose_tracker/tracking"
+const API_KEY =  "REPLACE_THIS_GO_TO_app.posetracker.com"
+const POSETRACKER_API = "https://app.posetracker.com/pose_tracker/tracking"
 
 export default function App() {
   const [poseTrackerInfos, setCurrentPoseTrackerInfos] = useState()
