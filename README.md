@@ -1,8 +1,9 @@
-# PoseTracker API template using React Native and Expo
-This is an integration React native for the API PoseTracker API (posetrakcer.com). This application use an API of pose detection to detect real-time posture of the user facing camera.
+# Mobile app template using React Native Expo for pose estimation
+A basic example of React Native running a our pose estimation api without need of external SDK or lib.
+This application use an API for real-time human pose detection.
 
 # PoseTracker API
-PoseTracker is the first real-time posture detection API optimized for Web, IOS & Android. No need to install AI or ML package, you just need to follow our tutorial.
+PoseTracker provides developer-oriented cutting edge AI fitness features, with easy integration and production ready code. Dramatically improving the speed of motion capture implementation for mobile applications.
 
 # Install & run
 GET YOUR API KEY : 
