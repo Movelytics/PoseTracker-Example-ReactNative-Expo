@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions, Alert } from 'react-native';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import WebView from 'react-native-webview';
-import {Camera, useCameraPermissions} from 'expo-camera';
+import { Camera, useCameraPermissions } from 'expo-camera';
 
-// Our API request your token provided on our dashboard on posetracker.com (It's free <3)
-const API_KEY = "TO_REPLACE_FIND_IT_ON_app.posetracker.com";
+const API_KEY = "REPLACE_WITH_YOU_API_KEY";
 const POSETRACKER_API = "https://app.posetracker.com/pose_tracker/tracking";
-
-// Get the dimensions of the screen
 const { width, height } = Dimensions.get('window');
 
 export default function App() {
@@ -15,35 +12,34 @@ export default function App() {
   const [repsCounter, setRepsCounter] = useState(0);
   const [permission, requestPermission] = useCameraPermissions();
 
-
   useEffect(() => {
     if (!permission?.granted) {
-      requestPermission().then(e => {
-      })
+      requestPermission();
     }
   }, []);
 
-  // Our API request the exercise you want to track and count
   const exercise = "squat";
-
-  // Our API request the difficulty of the exercise (by default it's set to normal)
   const difficulty = "easy";
-
-  // You can request API to display user skeleton or not (by default it's set to true)
   const skeleton = true;
 
   const posetracker_url = `${POSETRACKER_API}?token=${API_KEY}&exercise=${exercise}&difficulty=${difficulty}&width=${width}&height=${height}&isMobile=${true}`;
 
-  // We need a bridge to transit data between the ReactNative app and our WebView
-  // The WebView will use this function defined here to send info that we will use later
+  // Bridge JavaScript BETWEEN POSETRACKER & YOUR APP
   const jsBridge = `
-  (function() {
-    document.addEventListener('DOMContentLoaded', function() {
-      window.webViewCallback = function(info) {
-        window.ReactNativeWebView.postMessage(JSON.stringify(info));
-      }
+    window.addEventListener('message', function(event) {
+      window.ReactNativeWebView.postMessage(JSON.stringify(event.data));
     });
-  })();
+
+    window.webViewCallback = function(data) {
+      window.ReactNativeWebView.postMessage(JSON.stringify(data));
+    };
+
+    const originalPostMessage = window.postMessage;
+    window.postMessage = function(data) {
+      window.ReactNativeWebView.postMessage(typeof data === 'string' ? data : JSON.stringify(data));
+    };
+
+    true; // Important for a correct injection
   `;
 
   const handleCounter = (count) => {
@@ -52,16 +48,31 @@ export default function App() {
 
   const handleInfos = (infos) => {
     setCurrentPoseTrackerInfos(infos);
-    console.log(infos);
+    console.log('Received infos:', infos);
   };
 
-  // This is the function passed to the WebView to listen for info from the WebView
   const webViewCallback = (info) => {
-    switch (info.type) {
-      case 'counter':
-        return handleCounter(info.current_count);
-      default:
-        return handleInfos(info);
+    if (info?.type === 'counter') {
+      handleCounter(info.current_count);
+    } else {
+      handleInfos(info);
+    }
+  };
+
+  const onMessage = (event) => {
+    try {
+      let parsedData;
+      if (typeof event.nativeEvent.data === 'string') {
+        parsedData = JSON.parse(event.nativeEvent.data);
+      } else {
+        parsedData = event.nativeEvent.data;
+      }
+
+      console.log('Parsed data:', parsedData);
+      webViewCallback(parsedData);
+    } catch (error) {
+      console.error('Error processing message:', error);
+      console.log('Problematic data:', event.nativeEvent.data);
     }
   };
 
@@ -76,31 +87,37 @@ export default function App() {
         source={{ uri: posetracker_url }}
         originWhitelist={['*']}
         injectedJavaScript={jsBridge}
-        onMessage={(event) => {
-          try {
-            const info = JSON.parse(event.nativeEvent.data);
-            webViewCallback(info);
-          } catch (error) {
-            console.error('Error parsing message from WebView', error);
-          }
+        onMessage={onMessage}
+        // Activer le debug pour voir les logs WebView
+        debuggingEnabled={true}
+        // Permettre les communications mixtes HTTP/HTTPS si nécessaire
+        mixedContentMode="compatibility"
+        // Ajouter un gestionnaire d'erreurs
+        onError={(syntheticEvent) => {
+          const { nativeEvent } = syntheticEvent;
+          console.warn('WebView error:', nativeEvent);
+        }}
+        // Ajouter un gestionnaire pour les erreurs de chargement
+        onLoadingError={(syntheticEvent) => {
+          const { nativeEvent } = syntheticEvent;
+          console.warn('WebView loading error:', nativeEvent);
         }}
       />
       <View style={styles.infoContainer}>
         <Text>Status : {!poseTrackerInfos ? "loading AI..." : "AI Running"}</Text>
         <Text>Info type : {!poseTrackerInfos ? "loading AI..." : poseTrackerInfos.type}</Text>
-        <Text>Infos : {poseTrackerInfos}</Text>
+        <Text>Counter: {repsCounter}</Text>
         {poseTrackerInfos?.ready === false ? (
           <>
             <Text>Placement ready: false</Text>
-            <Text>Placement info : Move {poseTrackerInfos?.postureDirection}</Text>
+            <Text>Placement info: Move {poseTrackerInfos?.postureDirection}</Text>
           </>
         ) : (
           <>
             <Text>Placement ready: true</Text>
-            <Text>Placement info : You can start doing squats 🏋️</Text>
+            <Text>Placement info: You can start doing squats 🏋️</Text>
           </>
         )}
-        {repsCounter > 0 && <Text>Counter: {repsCounter}</Text>}
       </View>
     </View>
   );
