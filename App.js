@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import WebView from 'react-native-webview';
 import { Camera, useCameraPermissions } from 'expo-camera';
 
-const API_KEY = "REPLACE_WITH_YOU_API_KEY";
+const API_KEY = "TO_DO_REPLACE";
 const POSETRACKER_API = "https://app.posetracker.com/pose_tracker/tracking";
 const { width, height } = Dimensions.get('window');
 
@@ -22,7 +22,7 @@ export default function App() {
   const difficulty = "easy";
   const skeleton = true;
 
-  const posetracker_url = `${POSETRACKER_API}?token=${API_KEY}&exercise=${exercise}&difficulty=${difficulty}&width=${width}&height=${height}&isMobile=${true}`;
+  const posetracker_url = `${POSETRACKER_API}?token=${API_KEY}&exercise=${exercise}&difficulty=${difficulty}&width=${width}&height=${height}`;
 
   // Bridge JavaScript BETWEEN POSETRACKER & YOUR APP
   const jsBridge = `

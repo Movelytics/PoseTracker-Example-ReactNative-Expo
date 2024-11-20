@@ -9,12 +9,12 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "expo": "^51.0.38",
-    "expo-camera": "~15.0.16",
-    "expo-status-bar": "~1.12.1",
-    "react": "18.2.0",
-    "react-native": "0.74.5",
-    "react-native-webview": "13.8.6"
+    "expo": "^52.0.8",
+    "expo-camera": "~16.0.6",
+    "expo-status-bar": "~2.0.0",
+    "react": "18.3.1",
+    "react-native": "0.76.2",
+    "react-native-webview": "13.12.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
