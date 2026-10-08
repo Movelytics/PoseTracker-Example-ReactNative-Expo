@@ -1,12 +1,16 @@
-# PoseTracker API template using React Native and Expo
-This is an integration React native for the API PoseTracker API (posetrakcer.com). This application use an API of pose detection to detect real-time posture of the user facing camera.
+PoseTracker is a real-time pose estimation SDK and API for fitness and rehab apps. It runs MoveNet on-device on React Native, iOS, Android and the web. Keypoints are free. An optional API key adds rep counting, joint angles and a form score.
 
-# PoseTracker API
-PoseTracker is the first real-time posture detection API optimized for Web, IOS & Android. No need to install AI or ML package, you just need to follow our tutorial.
+This repository is an Expo example of that SDK.
+
+Guide: https://www.posetracker.com/news/react-native-pose-estimation-expo
+
+Docs: https://docs.posetracker.com/quickstart
+
+[![npm](https://img.shields.io/npm/v/@pose-tracker/react-native-pose-estimation)](https://www.npmjs.com/package/@pose-tracker/react-native-pose-estimation)
 
 # Install & run
 GET YOUR API KEY : 
-- First you need to create a free account to get your API_KEY website : https://posetracker.com
+- First you need to create a free account to get your API_KEY website : https://www.posetracker.com
 - Then replace the API_KEY at the ligne 7 in App.js
 
 Then run : 
